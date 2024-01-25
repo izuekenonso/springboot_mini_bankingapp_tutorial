@@ -22,8 +22,14 @@ public class BankingController {
 	}
 	
 	@PostMapping("/deposit")
-	public Account deposit(@RequestBody PaymentDto paymentDto) {
+	public Account deposit(@RequestBody PaymentDto paymentDto) throws Exception {
 		
 		return paymentServiceImpl.deposit(paymentDto);
+	}
+	
+	@PostMapping("/withdrawal")
+	public Account withdrawal(@RequestBody PaymentDto paymentDto) throws Exception {
+		
+		return paymentServiceImpl.withdrawal(paymentDto);
 	}
 }

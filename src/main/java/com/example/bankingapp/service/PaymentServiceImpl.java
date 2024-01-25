@@ -19,7 +19,9 @@ public class PaymentServiceImpl implements PaymentService{
 	private AccountServiceImpl accountServiceImpl;
 	
 	@Override
-	public Account deposit(PaymentDto paymentDto) {
+	public Account deposit(PaymentDto paymentDto) throws Exception {
+		
+		isNotNegativeAmountInput(paymentDto);
 		
 		Payment payment = new Payment();
 		payment.setAmount(paymentDto.getAmount());
@@ -33,9 +35,35 @@ public class PaymentServiceImpl implements PaymentService{
 		return accountServiceImpl.getAccountBalance(payment);
 	}
 
+	private boolean isNotNegativeAmountInput(PaymentDto paymentDto) throws Exception {
+		
+		if (paymentDto.getAmount() <= 0) {
+			throw new Exception("Invalid input");
+		}
+		
+		return true;
+	}
+
 	@Override
-	public void withdrawal() {
-		// TODO Auto-generated method stub
+	public Account withdrawal(PaymentDto paymentDto) throws Exception {
+		
+		isNotNegativeAmountInput(paymentDto);
+		
+		Payment payment = new Payment();
+		payment.setAmount(paymentDto.getAmount());
+		payment.setDestinationAccount(paymentDto.getDestinationAccount());
+		payment.setPaymentType(paymentDto.getPaymentType());
+		
+		log.info("Payment Entry" + payment.toString());
+		Account account = accountServiceImpl.getAccountBalance(payment);
+		
+		if ((account.getBalance() - payment.getAmount()) < 0) {
+			throw new Exception("Insufficient Balance");
+		}else {
+			accountServiceImpl.updateAccountBalance(payment);
+		}
+		
+		return accountServiceImpl.getAccountBalance(payment);
 		
 	}
 

@@ -5,7 +5,8 @@ import com.example.bankingapp.entity.Account;
 
 public interface PaymentService {
 	
-	Account deposit(PaymentDto paymentDto);
-	void withdrawal();
+	Account deposit(PaymentDto paymentDto) throws Exception;
+	Account withdrawal(PaymentDto paymentDto) throws Exception;
 	void tranfer();
+	
 }

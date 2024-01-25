@@ -66,6 +66,6 @@ public class PaymentDto {
 	@Override
 	public String toString() {
 		return "PaymentDto [id=" + id + ", amount=" + amount + ", sourceAccount=" + sourceAccount
-				+ ", destinationAccount=" + destinationAccount + ", userId=" + paymentType + "]";
+				+ ", destinationAccount=" + destinationAccount + ", paymentType=" + paymentType + "]";
 	}
 }

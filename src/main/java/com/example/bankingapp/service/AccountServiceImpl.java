@@ -29,8 +29,33 @@ public class AccountServiceImpl implements AccountService {
 									.filter(x -> x.getAccountNumber().equals(payment.getDestinationAccount()))
 									.findFirst()
 									.orElseThrow();
-		double newBalance = account.getBalance() + payment.getAmount();
+		
+		double newBalance = processPayment(account, payment);
+		
  		account.setBalance(newBalance);
+	}
+
+	private double processPayment(Account account, Payment payment) {
+		
+		double newBalance = 0.0;
+		
+		switch(payment.getPaymentType()) {
+			case DEPOSIT: 
+				newBalance = account.getBalance() + payment.getAmount();
+			break;
+			case WITHDRAWAL: 
+				newBalance = account.getBalance() - payment.getAmount();
+			break;
+			case TRANSFER: 
+				// do something
+			break;
+			default:
+				newBalance = 0.0;
+			break;
+		}
+		
+		return newBalance;
+		
 	}
 
 	@Override
