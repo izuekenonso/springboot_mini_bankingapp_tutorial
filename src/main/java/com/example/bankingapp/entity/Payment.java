@@ -6,8 +6,8 @@ public class Payment {
 	
 	private Long id;
 	private double amount;
-	private String sourceAccount;
-	private String destinationAccount;
+	private String creditAccount;
+	private String debitAccount;
 	private PaymentType paymentType;
 	
 	
@@ -15,12 +15,12 @@ public class Payment {
 		
 	}
 
-	public Payment(Long id, double amount, String sourceAccount, String destinationAccount, PaymentType paymentType) {
+	public Payment(Long id, double amount, String creditAccount, String debitAccount, PaymentType paymentType) {
 
 		this.id = id;
 		this.amount = amount;
-		this.sourceAccount = sourceAccount;
-		this.destinationAccount = destinationAccount;
+		this.creditAccount = creditAccount;
+		this.debitAccount = debitAccount;
 		this.paymentType = paymentType;
 	}
 	
@@ -40,20 +40,20 @@ public class Payment {
 		this.amount = amount;
 	}
 
-	public String getSourceAccount() {
-		return sourceAccount;
+	public String getCreditAccount() {
+		return creditAccount;
 	}
 
-	public void setSourceAccount(String sourceAccount) {
-		this.sourceAccount = sourceAccount;
+	public void setCreditAccount(String creditAccount) {
+		this.creditAccount = creditAccount;
 	}
 
-	public String getDestinationAccount() {
-		return destinationAccount;
+	public String getDebitAccount() {
+		return debitAccount;
 	}
 
-	public void setDestinationAccount(String destinationAccount) {
-		this.destinationAccount = destinationAccount;
+	public void setDebitAccount(String debitAccount) {
+		this.debitAccount = debitAccount;
 	}
 
 	public PaymentType getPaymentType() {
@@ -66,8 +66,8 @@ public class Payment {
 
 	@Override
 	public String toString() {
-		return "Payment [id=" + id + ", amount=" + amount + ", sourceAccount=" + sourceAccount
-				+ ", destinationAccount=" + destinationAccount + ", userId=" + paymentType + "]";
+		return "Payment [id=" + id + ", amount=" + amount + ", creditAccount=" + creditAccount
+				+ ", debitAccount=" + debitAccount + ", paymentType=" + paymentType + "]";
 	}
 
 }

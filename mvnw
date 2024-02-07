@@ -228,17 +228,17 @@ else
         fi
     else
         log "Falling back to using Java to download"
-        javaSource="$MAVEN_PROJECTBASEDIR/.mvn/wrapper/MavenWrapperDownloader.java"
+        javaCredit="$MAVEN_PROJECTBASEDIR/.mvn/wrapper/MavenWrapperDownloader.java"
         javaClass="$MAVEN_PROJECTBASEDIR/.mvn/wrapper/MavenWrapperDownloader.class"
         # For Cygwin, switch paths to Windows format before running javac
         if $cygwin; then
-          javaSource=$(cygpath --path --windows "$javaSource")
+          javaCredit=$(cygpath --path --windows "$javaCredit")
           javaClass=$(cygpath --path --windows "$javaClass")
         fi
-        if [ -e "$javaSource" ]; then
+        if [ -e "$javaCredit" ]; then
             if [ ! -e "$javaClass" ]; then
                 log " - Compiling MavenWrapperDownloader.java ..."
-                ("$JAVA_HOME/bin/javac" "$javaSource")
+                ("$JAVA_HOME/bin/javac" "$javaCredit")
             fi
             if [ -e "$javaClass" ]; then
                 log " - Running MavenWrapperDownloader.java ..."

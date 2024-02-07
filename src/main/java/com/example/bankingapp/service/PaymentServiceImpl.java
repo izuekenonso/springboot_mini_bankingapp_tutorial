@@ -5,34 +5,49 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.bankingapp.domain.ArithmeticOperation;
+import com.example.bankingapp.dto.AccountDto;
 import com.example.bankingapp.dto.PaymentDto;
+import com.example.bankingapp.dto.PaymentResponseDto;
 import com.example.bankingapp.entity.Account;
 import com.example.bankingapp.entity.Payment;
+import com.example.bankingapp.mapper.AccountMapper;
+import com.example.bankingapp.mapper.PaymentMapper;
 
 @Service
 public class PaymentServiceImpl implements PaymentService{
-	
+
 	Logger log = LoggerFactory.getLogger(PaymentServiceImpl.class);
 	
+	private Account account;
+	
+	private AccountDto accountDto;
+	
+	@Autowired
+	private PaymentResponseDto paymentResponseDto;
 	
 	@Autowired
 	private AccountServiceImpl accountServiceImpl;
 	
 	@Override
-	public Account deposit(PaymentDto paymentDto) throws Exception {
+	public PaymentResponseDto deposit(PaymentDto paymentDto) throws Exception {
 		
 		isNotNegativeAmountInput(paymentDto);
 		
-		Payment payment = new Payment();
-		payment.setAmount(paymentDto.getAmount());
-		payment.setDestinationAccount(paymentDto.getDestinationAccount());
-		payment.setPaymentType(paymentDto.getPaymentType());
+		Payment payment = PaymentMapper.dtoToPayment(paymentDto);
 		
 		log.info("Payment Entry" + payment.toString());
 		
-		accountServiceImpl.updateAccountBalance(payment);
+		accountServiceImpl.updateAccountBalance(payment, ArithmeticOperation.CREDIT);
 		
-		return accountServiceImpl.getAccountBalance(payment);
+		account = accountServiceImpl.findAccount(payment.getCreditAccount());
+		
+		accountDto = AccountMapper.accountToDto(account);
+		
+		paymentResponseDto.setCreditAccountDto(accountDto);
+		paymentResponseDto.setDebitAccountDto(null);
+		
+		return paymentResponseDto;
 	}
 
 	private boolean isNotNegativeAmountInput(PaymentDto paymentDto) throws Exception {
@@ -45,31 +60,38 @@ public class PaymentServiceImpl implements PaymentService{
 	}
 
 	@Override
-	public Account withdrawal(PaymentDto paymentDto) throws Exception {
+	public PaymentResponseDto withdrawal(PaymentDto paymentDto) throws Exception {
 		
 		isNotNegativeAmountInput(paymentDto);
 		
-		Payment payment = new Payment();
-		payment.setAmount(paymentDto.getAmount());
-		payment.setDestinationAccount(paymentDto.getDestinationAccount());
-		payment.setPaymentType(paymentDto.getPaymentType());
+		Payment payment = PaymentMapper.dtoToPayment(paymentDto);
 		
 		log.info("Payment Entry" + payment.toString());
-		Account account = accountServiceImpl.getAccountBalance(payment);
+		Account account = accountServiceImpl.findAccount(payment.getDebitAccount());
 		
 		if ((account.getBalance() - payment.getAmount()) < 0) {
 			throw new Exception("Insufficient Balance");
 		}else {
-			accountServiceImpl.updateAccountBalance(payment);
+			accountServiceImpl.updateAccountBalance(payment, ArithmeticOperation.DEBIT);
+			
+			account = accountServiceImpl.findAccount(payment.getDebitAccount());
+			
+			accountDto = AccountMapper.accountToDto(account);
+			
+			paymentResponseDto.setCreditAccountDto(null);
+			paymentResponseDto.setDebitAccountDto(accountDto);
+			
+			return paymentResponseDto;
 		}
 		
-		return accountServiceImpl.getAccountBalance(payment);
+		
 		
 	}
 
 	@Override
-	public void tranfer() {
+	public PaymentResponseDto transfer(PaymentDto paymentDto) throws Exception {
 		// TODO Auto-generated method stub
+		return null;
 		
 	}
 

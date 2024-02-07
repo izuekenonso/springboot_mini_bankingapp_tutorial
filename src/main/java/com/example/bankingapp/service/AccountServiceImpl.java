@@ -5,12 +5,15 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.bankingapp.domain.ArithmeticOperation;
 import com.example.bankingapp.entity.Account;
 import com.example.bankingapp.entity.Payment;
 
 @Service
 public class AccountServiceImpl implements AccountService {
-
+	
+	private Account account;
+	
 	private List<Account> accountList = new ArrayList<Account>();
 	
 	public AccountServiceImpl() {
@@ -24,26 +27,24 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	@Override
-	public void updateAccountBalance(Payment payment) {
-		Account account = accountList.stream()
-									.filter(x -> x.getAccountNumber().equals(payment.getDestinationAccount()))
-									.findFirst()
-									.orElseThrow();
-		
-		double newBalance = processPayment(account, payment);
+	public void updateAccountBalance(Payment payment, ArithmeticOperation ops) {
+
+		double newBalance = processPayment(payment, ops);
 		
  		account.setBalance(newBalance);
 	}
 
-	private double processPayment(Account account, Payment payment) {
+	private double processPayment(Payment payment,  ArithmeticOperation ops) {
 		
 		double newBalance = 0.0;
 		
 		switch(payment.getPaymentType()) {
-			case DEPOSIT: 
+			case DEPOSIT: 			
+				account = findAccount(payment.getCreditAccount());
 				newBalance = account.getBalance() + payment.getAmount();
 			break;
 			case WITHDRAWAL: 
+				account = findAccount(payment.getDebitAccount());
 				newBalance = account.getBalance() - payment.getAmount();
 			break;
 			case TRANSFER: 
@@ -59,10 +60,18 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public Account getAccountBalance(Payment payment) {
+	public Account getAccountBalance(String accountNumber) {
+		
+		account = findAccount(accountNumber);
+		
+		return account;
+	}
+
+	@Override
+	public Account findAccount(String accountNumber) {
 		
 		Account account = accountList.stream()
-				.filter(x -> x.getAccountNumber().equals(payment.getDestinationAccount()))
+				.filter(x -> x.getAccountNumber().equals(accountNumber))
 				.findFirst()
 				.orElseThrow();
 		

@@ -3,7 +3,7 @@ package com.example.bankingapp.dto;
 public class AccountDto {
 	private Long id;
 	private String accountNumber;
-	private String balance;
+	private double balance;
 	private Long userId;
 	
 	
@@ -11,7 +11,7 @@ public class AccountDto {
 
 	}
 	
-	public AccountDto(Long id, String accountNumber, String balance, Long userId) {
+	public AccountDto(Long id, String accountNumber, double balance, Long userId) {
 		
 		this.id = id;
 		this.accountNumber = accountNumber;
@@ -30,10 +30,10 @@ public class AccountDto {
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
 	}
-	public String getBalance() {
+	public double getBalance() {
 		return balance;
 	}
-	public void setBalance(String balance) {
+	public void setBalance(double balance) {
 		this.balance = balance;
 	}
 	public Long getUserId() {

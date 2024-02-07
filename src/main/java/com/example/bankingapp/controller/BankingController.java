@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bankingapp.dto.PaymentDto;
+import com.example.bankingapp.dto.PaymentResponseDto;
 import com.example.bankingapp.entity.Account;
 import com.example.bankingapp.service.PaymentServiceImpl;
 
@@ -22,13 +23,13 @@ public class BankingController {
 	}
 	
 	@PostMapping("/deposit")
-	public Account deposit(@RequestBody PaymentDto paymentDto) throws Exception {
+	public PaymentResponseDto deposit(@RequestBody PaymentDto paymentDto) throws Exception {
 		
 		return paymentServiceImpl.deposit(paymentDto);
 	}
 	
 	@PostMapping("/withdrawal")
-	public Account withdrawal(@RequestBody PaymentDto paymentDto) throws Exception {
+	public PaymentResponseDto withdrawal(@RequestBody PaymentDto paymentDto) throws Exception {
 		
 		return paymentServiceImpl.withdrawal(paymentDto);
 	}
