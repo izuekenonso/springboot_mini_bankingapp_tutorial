@@ -33,4 +33,10 @@ public class BankingController {
 		
 		return paymentServiceImpl.withdrawal(paymentDto);
 	}
+	
+	@PostMapping("/transfer")
+	public PaymentResponseDto transfer(@RequestBody PaymentDto paymentDto) throws Exception {
+		
+		return paymentServiceImpl.transfer(paymentDto);
+	}
 }

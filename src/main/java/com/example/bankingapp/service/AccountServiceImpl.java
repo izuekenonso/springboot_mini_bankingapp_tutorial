@@ -40,15 +40,14 @@ public class AccountServiceImpl implements AccountService {
 		
 		switch(payment.getPaymentType()) {
 			case DEPOSIT: 			
-				account = findAccount(payment.getCreditAccount());
-				newBalance = account.getBalance() + payment.getAmount();
+				newBalance = creditOps(payment);
 			break;
 			case WITHDRAWAL: 
-				account = findAccount(payment.getDebitAccount());
-				newBalance = account.getBalance() - payment.getAmount();
+				newBalance = debitOps(payment);
 			break;
 			case TRANSFER: 
-				// do something
+				if(ops == ArithmeticOperation.CREDIT) newBalance = creditOps(payment);
+				if(ops == ArithmeticOperation.DEBIT) newBalance = debitOps(payment);
 			break;
 			default:
 				newBalance = 0.0;
@@ -57,6 +56,16 @@ public class AccountServiceImpl implements AccountService {
 		
 		return newBalance;
 		
+	}
+
+	private double debitOps(Payment payment) {
+		account = findAccount(payment.getDebitAccount());
+		return account.getBalance() - payment.getAmount();
+	}
+
+	private double creditOps(Payment payment) {
+		account = findAccount(payment.getCreditAccount());
+		return account.getBalance() + payment.getAmount();
 	}
 
 	@Override

@@ -38,16 +38,22 @@ public class PaymentServiceImpl implements PaymentService{
 		
 		log.info("Payment Entry" + payment.toString());
 		
+		creditOps(payment);
+		
+		paymentResponseDto.setCreditAccountDto(accountDto);
+		paymentResponseDto.setDebitAccountDto(null);
+		
+		return paymentResponseDto;
+	}
+
+	private void creditOps(Payment payment) {
+		
 		accountServiceImpl.updateAccountBalance(payment, ArithmeticOperation.CREDIT);
 		
 		account = accountServiceImpl.findAccount(payment.getCreditAccount());
 		
 		accountDto = AccountMapper.accountToDto(account);
 		
-		paymentResponseDto.setCreditAccountDto(accountDto);
-		paymentResponseDto.setDebitAccountDto(null);
-		
-		return paymentResponseDto;
 	}
 
 	private boolean isNotNegativeAmountInput(PaymentDto paymentDto) throws Exception {
@@ -67,6 +73,20 @@ public class PaymentServiceImpl implements PaymentService{
 		Payment payment = PaymentMapper.dtoToPayment(paymentDto);
 		
 		log.info("Payment Entry" + payment.toString());
+		
+		debitOps(payment);
+		
+		paymentResponseDto.setCreditAccountDto(null);
+		paymentResponseDto.setDebitAccountDto(accountDto);
+		
+		return paymentResponseDto;
+		
+		
+		
+	}
+
+	private void debitOps(Payment payment) throws Exception {
+		
 		Account account = accountServiceImpl.findAccount(payment.getDebitAccount());
 		
 		if ((account.getBalance() - payment.getAmount()) < 0) {
@@ -77,21 +97,26 @@ public class PaymentServiceImpl implements PaymentService{
 			account = accountServiceImpl.findAccount(payment.getDebitAccount());
 			
 			accountDto = AccountMapper.accountToDto(account);
-			
-			paymentResponseDto.setCreditAccountDto(null);
-			paymentResponseDto.setDebitAccountDto(accountDto);
-			
-			return paymentResponseDto;
 		}
-		
-		
 		
 	}
 
 	@Override
 	public PaymentResponseDto transfer(PaymentDto paymentDto) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		
+		isNotNegativeAmountInput(paymentDto);
+		
+		Payment payment = PaymentMapper.dtoToPayment(paymentDto);
+		
+		if(payment.getCreditAccount() != null) {
+			creditOps(payment);
+			paymentResponseDto.setCreditAccountDto(accountDto);
+		}
+		if(payment.getDebitAccount() != null) {
+			debitOps(payment);
+			paymentResponseDto.setDebitAccountDto(accountDto);
+		}
+		return paymentResponseDto;
 		
 	}
 
